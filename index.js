@@ -80,6 +80,6 @@ server.get('/home', restify.plugins.serveStatic({
   default: 'index.html'
 }));
 
-server.listen(5000, function () {
-  console.log('%s listening at %s', server.name, server.url);
+server.listen(process.env.PORT || 5000, function () {
+  console.log('%s listening on port %s', server.name, process.env.PORT);
 });
