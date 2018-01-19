@@ -76,10 +76,10 @@ server.get('hot/:type',  function (req, res) {
 });
 
 server.get('/home', restify.plugins.serveStatic({
-  directory: './client',
+  directory: './client/build',
   default: 'index.html'
 }));
 
 server.listen(process.env.PORT || 5000, function () {
-  console.log('%s listening on port %s', server.name, process.env.PORT);
+  console.log('%s listening on port %s', server.name, process.env.PORT || 5000);
 });
