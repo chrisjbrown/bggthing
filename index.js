@@ -1,19 +1,10 @@
+const express = require('express');
+const path = require('path');
 
-const restify = require('restify');
-const restifyPlugins = require('restify').plugins;
+const app = express();
 
-const server = restify.createServer({
-  name: 'bggthing',
-  version: '1.0.0'
-});
-
-/**
-  * Middleware
-  */
-  server.use(restifyPlugins.jsonBodyParser({ mapParams: true }));
-  server.use(restifyPlugins.acceptParser(server.acceptable));
-  server.use(restifyPlugins.queryParser({ mapParams: true }));
-  server.use(restifyPlugins.fullResponse());
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 const bggOptions = {
   timeout: 50000, // timeout of 10s (5s is the default)
@@ -28,7 +19,8 @@ const bggOptions = {
 
 const bgg = require('bgg')(bggOptions);
 
-server.get('search/:name', function (req, res) {
+// Put all API endpoints under '/api'
+app.get('/search/:name', function (req, res) {
   bgg('search', {
     query: req.params.name,
     type: req.query.type || 'boardgame',
@@ -42,7 +34,7 @@ server.get('search/:name', function (req, res) {
   });
 });
 
-server.get('boardgame/:id', function (req, res) {
+app.get('/boardgame/:id', function (req, res) {
   bgg('thing', {
     id: req.params.id,
     type: req.query.type || 'boardgame',
@@ -63,7 +55,7 @@ server.get('boardgame/:id', function (req, res) {
   });
 });
 
-server.get('hot/:type',  function (req, res) {
+app.get('/hot/:type',  function (req, res) {
   bgg('hot', {
     type: req.params.type,
   })
@@ -75,11 +67,13 @@ server.get('hot/:type',  function (req, res) {
   });
 });
 
-server.get('/home', restify.plugins.serveStatic({
-  directory: './client/build',
-  default: 'index.html'
-}));
-
-server.listen(process.env.PORT || 5000, function () {
-  console.log('%s listening on port %s', server.name, process.env.PORT || 5000);
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
+
+const port = process.env.PORT || 5000;
+app.listen(port);
+
+console.log(`bggthing listening on ${port}`);
