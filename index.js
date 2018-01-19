@@ -1,7 +1,6 @@
 
 const restify = require('restify');
 const restifyPlugins = require('restify').plugins;
-const path = require('path');
 
 const server = restify.createServer({
   name: 'bggthing',
