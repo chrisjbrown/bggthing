@@ -17,7 +17,6 @@ class Boardgame extends Component {
 
   componentDidMount() {
     getBoardgame(this.props.match.params.id).then((data) => {
-      console.log('gotit', data);
       if (data.items) {
         this.setState({
           game: data.items.item
@@ -30,9 +29,12 @@ class Boardgame extends Component {
     return (
       <div>
         <div>id { this.props.match.params.id }</div>
-        <div>name { this.state.game.name[0].value }</div>
+        <div>name { this.state.game.name[0] ? this.state.game.name[0].value : this.state.game.name.value }</div>
         <div>
-          <img alt="" src={ this.state.game.image }/>
+          <img width="500" height="500" alt="" src={ this.state.game.image }/>
+        </div>
+        <div>
+          { this.state.game.description }
         </div>
       </div>
     );

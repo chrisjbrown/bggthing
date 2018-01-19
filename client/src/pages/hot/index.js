@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getHotList } from '../../api';
+import { Link } from 'react-router-dom';
 
 class Hot extends Component {
   constructor(props) {
@@ -26,14 +27,16 @@ class Hot extends Component {
         {
           this.state.games.map((game) => {
             return (
-              <div key={ game.id }>
+              <Link key={ game.id } to={`/boardgame/${game.id}`}>
                 <div>
-                  { game.name.value } id: { game.id }
+                  <div>
+                    { game.name.value } id: { game.id }
+                  </div>
+                  <div>
+                    <img alt={ game.name.value } src={ game.thumbnail.value } />
+                  </div>
                 </div>
-                <div>
-                  <img alt="" src={ game.thumbnail.value } />
-                </div>
-              </div>
+              </Link>
             );
           })
         }
