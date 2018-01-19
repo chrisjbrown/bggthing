@@ -12,7 +12,6 @@ class Hot extends Component {
 
   componentDidMount() {
     getHotList('boardgame').then((data) => {
-      console.log('gotit', data);
       if (data.items) {
         this.setState({
           games: data.items.item
