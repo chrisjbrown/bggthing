@@ -1,0 +1,15 @@
+{
+  "name": "bggthing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "proxy": "http://localhost:5000",
+  "scripts": {
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && yarn --production=false && yarn run build"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "restify": "^6.3.4"
+  }
+}
