@@ -1,48 +1,32 @@
 import React, { Component } from 'react';
-import { getHotList } from '../../api';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Link } from 'redux-little-router';
 
 class Hot extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      games: []
-    };
-  }
-
-  componentDidMount() {
-    getHotList('boardgame').then((data) => {
-      if (data.items) {
-        this.setState({
-          games: data.items.item
-        });
-      }
-    });
-  }
-
   render() {
     return (
       <div>
-        {
-          this.state.games.map((game) => {
-            return (
-              <Link key={ game.id } to={`/boardgame/${game.id}`}>
+        {this.props.list.map(game => {
+          return (
+            <Link key={game.id} href={`/boardgame/${game.id}`}>
+              <div>
                 <div>
-                  <div>
-                    { game.name.value } id: { game.id }
-                  </div>
-                  <div>
-                    <img alt={ game.name.value } src={ game.thumbnail.value } />
-                  </div>
+                  {game.name.value} id: {game.id}
                 </div>
-              </Link>
-            );
-          })
-        }
+                <div>
+                  <img alt={game.name.value} src={game.thumbnail.value} />
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     );
   }
 }
 
-export default Hot;
+export default connect(state => ({
+  list: state.hotStore.list,
+  isFetching: state.hotStore.isFetching,
+  error: state.hotStore.error
+}))(Hot);

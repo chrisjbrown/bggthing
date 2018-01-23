@@ -1,33 +1,30 @@
 import React, { Component } from 'react';
-import { search } from '../../api';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { push } from 'redux-little-router';
 
 class Search extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      query: '',
-      results: []
+      query: ''
     };
   }
 
-  onSearchChange = (event) => {
+  onSearchChange = event => {
     if (event.currentTarget.value !== this.state.query) {
       this.setState({
         query: event.currentTarget.value
       });
     }
-  }
+  };
 
   handleSearch = () => {
     if (this.state.query) {
-      search(this.state.query).then((data) => {
-        this.setState({
-          results: data.items.item
-        });
-      });
+      this.props.push(`/search/${this.state.query}`);
     }
-  }
+  };
 
   render() {
     return (
@@ -35,24 +32,33 @@ class Search extends Component {
         <h1>Search</h1>
         <input
           placeholder="search"
-          value={ this.state.query }
-          onChange={ this.onSearchChange }
+          value={this.state.query}
+          onChange={this.onSearchChange}
         />
-        <button onClick={ this.handleSearch }>
-          search
-        </button>
-        {
-          this.state.results.map((result) => {
-            return (
-              <div key={ result.id }>
-                <h2>{result.name.value}</h2>
-              </div>
-            )
-          })
-        }
+        <button onClick={this.handleSearch}>search</button>
+        {this.props.list.map(result => {
+          return (
+            <div key={result.id}>
+              <h2>{result.name.value}</h2>
+            </div>
+          );
+        })}
       </div>
     );
   }
 }
 
-export default Search;
+export default connect(
+  state => ({
+    list: state.searchStore.list,
+    isFetching: state.searchStore.isFetching,
+    error: state.searchStore.error
+  }),
+  dispatch =>
+    bindActionCreators(
+      {
+        push
+      },
+      dispatch
+    )
+)(Search);
