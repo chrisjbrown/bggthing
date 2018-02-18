@@ -19,12 +19,6 @@ class App extends Component {
           <Fragment forRoute="/boardgame">
             <Boardgame />
           </Fragment>
-          <div>
-            data provided by{' '}
-            <a href="https://boardgamegeek.com/" alt="boardgamegeek">
-              boardgamegeek
-            </a>
-          </div>
         </div>
       </Fragment>
     );

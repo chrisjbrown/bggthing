@@ -1,17 +1,41 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'redux-little-router';
+import { Loader, Dimmer } from 'semantic-ui-react';
+
+import { Breadcrumb } from 'semantic-ui-react';
 
 class Boardgame extends Component {
+  renderLoader() {
+    return (
+      <Dimmer active>
+        <Loader indeterminate>loading game stuff</Loader>
+      </Dimmer>
+    );
+  }
+
   render() {
+    if (this.props.isFetching) {
+      return this.renderLoader();
+    }
+
+    const gameName = Array.isArray(this.props.game.name)
+      ? this.props.game.name[0].value
+      : this.props.game.name.value;
+
     return (
       <div>
-        <div>id {this.props.router.params.id}</div>
         <div>
-          name{' '}
-          {this.props.game.name[0]
-            ? this.props.game.name[0].value
-            : this.props.game.name.value}
+          <Breadcrumb>
+            <Breadcrumb.Section>
+              <Link href="/">Hot</Link>
+            </Breadcrumb.Section>
+            <Breadcrumb.Divider>/</Breadcrumb.Divider>
+            <Breadcrumb.Section>{gameName}</Breadcrumb.Section>
+          </Breadcrumb>
         </div>
+        <div>id {this.props.router.params.id}</div>
+        <div>name {gameName}</div>
         <div>
           <img width="500" height="500" alt="" src={this.props.game.image} />
         </div>
